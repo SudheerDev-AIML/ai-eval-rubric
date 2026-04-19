@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI System Evaluation Rubric</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-page: #F7F6F3;
+    --bg-card: #FFFFFF;
+    --bg-subtle: #F0EFF9;
+    --text-primary: #111110;
+    --text-secondary: #6F6E69;
+    --text-muted: #A8A7A0;
+    --accent: #5B4FD4;
+    --accent-light: #EEEDFE;
+    --success: #1D9E75;
+    --success-light: #E1F5EE;
+    --warning: #CA8A04;
+    --warning-light: #FEF9C3;
+    --danger: #DC2626;
+    --danger-light: #FEE2E2;
+    --border: rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.15);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-page: #111110;
+      --bg-card: #1C1C1A;
+      --bg-subtle: #1E1B3A;
+      --text-primary: #EEEDE8;
+      --text-secondary: #A8A7A0;
+      --text-muted: #6F6E69;
+      --accent: #7C6FE8;
+      --accent-light: #1E1B3A;
+      --success: #34D399;
+      --success-light: #052E16;
+      --warning: #FBBF24;
+      --warning-light: #1C1400;
+      --danger: #F87171;
+      --danger-light: #2D0A0A;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.15);
+      --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    background: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  /* ---------- HEADER ---------- */
+  .app-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-page);
+    padding: 16px 24px;
+  }
+
+  .app-header-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .brand-mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: var(--accent);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-weight: 600;
+    font-size: 12px;
+  }
+
+  .step-counter {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    width: 100%;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ---------- LAYOUT ---------- */
+  .main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 24px 120px;
+  }
+
+  .step {
+    display: none;
+    animation: stepIn 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .step.active {
+    display: block;
+  }
+
+  @keyframes stepIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step.leaving {
+    animation: stepOut 150ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+
+  @keyframes stepOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-8px); }
+  }
+
+  .card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    padding: 32px;
+  }
+
+  /* ---------- TYPOGRAPHY ---------- */
+  h1, h2, h3 {
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .display {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .subhead {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  /* ---------- INPUTS ---------- */
+  .field {
+    margin-bottom: 20px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+  }
+
+  input[type="text"]:hover {
+    border-color: var(--text-muted);
+  }
+
+  input[type="text"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+
+  input[type="text"]::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* ---------- CALLOUT ---------- */
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px 18px;
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 24px 0;
+  }
+
+  .callout strong {
+    font-weight: 600;
+  }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 150ms ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    line-height: 1;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(91, 79, 212, 0.25);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .btn-primary.full {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+  }
+
+  .btn-outline:hover {
+    background: var(--bg-subtle);
+    border-color: var(--text-muted);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+  }
+
+  .btn-ghost:hover {
+    color: var(--text-primary);
+    background: var(--bg-subtle);
+  }
+
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .btn:disabled:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ---------- DIMENSION HEADER ---------- */
+  .dim-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .dim-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+
+  .dim-title {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-bottom: 6px;
+  }
+
+  .dim-question {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .mini-score {
+    text-align: right;
+    flex-shrink: 0;
+    min-width: 110px;
+  }
+
+  .mini-score-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+
+  .mini-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .mini-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--text-muted);
+    transition: width 300ms ease, background-color 200ms ease;
+  }
+
+  /* ---------- CHECKLIST ---------- */
+  .checklist {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .check-item {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 200ms ease, border-color 200ms ease;
+    background: var(--bg-card);
+    align-items: flex-start;
+  }
+
+  .check-item:hover {
+    border-color: var(--border-strong);
+  }
+
+  .check-item.checked {
+    background: var(--success-light);
+    border-color: var(--success);
+  }
+
+  .check-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .check-box {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 6px;
+    background: var(--bg-card);
+    position: relative;
+    transition: all 150ms ease;
+    margin-top: 1px;
+  }
+
+  .check-item.checked .check-box {
+    background: var(--success);
+    border-color: var(--success);
+    animation: checkPop 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .check-box::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 11px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) scale(0);
+    transition: transform 150ms ease;
+  }
+
+  .check-item.checked .check-box::after {
+    transform: rotate(45deg) scale(1);
+  }
+
+  @keyframes checkPop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+
+  .check-text {
+    flex: 1;
+    line-height: 1.45;
+  }
+
+  .check-label {
+    font-weight: 600;
+    font-size: 14.5px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .check-sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* ---------- NAVIGATION ---------- */
+  .nav-row {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-page);
+    border-top: 1px solid var(--border);
+    padding: 16px 24px;
+    z-index: 10;
+  }
+
+  .nav-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: var(--bg-subtle);
+    color: var(--text-secondary);
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  .score-pill .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--text-muted);
+    transition: background-color 200ms ease;
+  }
+
+  /* ---------- SCORECARD ---------- */
+  .scorecard-hero {
+    text-align: left;
+    margin-bottom: 32px;
+  }
+
+  .scorecard-name {
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin-bottom: 6px;
+  }
+
+  .scorecard-sub {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .readiness-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .readiness-percent {
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .readiness-label {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+
+  .big-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .big-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .section-heading {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 36px 0 16px;
+  }
+
+  /* ---------- RADAR ---------- */
+  .radar-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  #radar {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    display: block;
+  }
+
+  /* ---------- DIM GRID ---------- */
+  .dim-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .dim-mini {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    background: var(--bg-card);
+  }
+
+  .dim-mini-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .dim-mini-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .dim-mini-score {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .pill-success { background: var(--success-light); color: var(--success); }
+  .pill-warning { background: var(--warning-light); color: var(--warning); }
+  .pill-danger { background: var(--danger-light); color: var(--danger); }
+
+  /* ---------- EVIDENCE TABLE ---------- */
+  .evidence-table {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .evidence-row {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 16px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .evidence-row:last-child { border-bottom: none; }
+
+  .tier-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .evidence-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+
+  .evidence-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ---------- GAPS ---------- */
+  .gap-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    background: var(--bg-card);
+  }
+
+  .gap-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+  }
+
+  .gap-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .gap-list li {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    padding: 4px 0 4px 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+
+  .gap-list li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 11px;
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--warning);
+  }
+
+  .all-good {
+    border: 1px solid var(--success);
+    background: var(--success-light);
+    color: var(--success);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .all-good svg {
+    flex-shrink: 0;
+  }
+
+  /* ---------- ACCORDION ---------- */
+  .accordion {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    background: var(--bg-card);
+    overflow: hidden;
+  }
+
+  .accordion-trigger {
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 16px 18px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: background-color 150ms ease;
+  }
+
+  .accordion-trigger:hover {
+    background: var(--bg-subtle);
+  }
+
+  .accordion-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-muted);
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+  }
+
+  .accordion.open .accordion-icon {
+    transform: rotate(180deg);
+  }
+
+  .accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 250ms ease;
+  }
+
+  .accordion-content-inner {
+    padding: 0 18px 18px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .accordion.open .accordion-content {
+    max-height: 200px;
+  }
+
+  /* ---------- ACTIONS ---------- */
+  .actions-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+
+  .actions-row .btn {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .app-footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 24px;
+    line-height: 1.6;
+  }
+
+  /* ---------- MOBILE ---------- */
+  @media (max-width: 600px) {
+    .main { padding: 24px 16px 140px; }
+    .card { padding: 22px; }
+    .display { font-size: 26px; }
+    .dim-title { font-size: 24px; }
+    .readiness-percent { font-size: 44px; }
+    .dim-grid { grid-template-columns: 1fr; }
+    .dim-top { flex-direction: column; }
+    .mini-score { text-align: left; min-width: 0; }
+    .nav-inner { flex-wrap: wrap; gap: 10px; }
+    .score-pill { order: -1; width: 100%; justify-content: center; }
+    .app-header { padding: 14px 16px; }
+    .scorecard-name { font-size: 24px; }
+    .nav-row { padding: 12px 16px; }
+  }
+
+  /* ---------- PRINT ---------- */
+  @media print {
+    body { background: #fff; color: #000; }
+    .app-header, .nav-row, .progress-track, .actions-row, .app-footer { display: none !important; }
+    .step { display: block !important; page-break-inside: avoid; animation: none; }
+    .card { box-shadow: none; border: 1px solid #ccc; }
+    .accordion-content { max-height: none !important; }
+    .accordion-content-inner { padding-bottom: 18px; }
+    .main { max-width: 100%; padding: 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="brand">
+      <div class="brand-mark">A</div>
+      AI System Evaluation Rubric
+    </div>
+    <div class="step-counter" id="stepCounter">Step 1 of 8</div>
+  </div>
+</header>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<main class="main" id="main">
+  <!-- STEP 0: Welcome -->
+  <section class="step active" data-step="0">
+    <div class="card">
+      <h1 class="display">Is this AI system ready for the real world?</h1>
+      <p class="subhead">A structured evaluation framework for AI-powered programs and interventions. Built from production deployment experience — translated for evaluators.</p>
+
+      <div class="field">
+        <label class="label" for="sysName">AI system or program name</label>
+        <input type="text" id="sysName" placeholder="e.g. CareerAI Job Coaching Chatbot" />
+      </div>
+      <div class="field">
+        <label class="label" for="sysContext">Deployment context</label>
+        <input type="text" id="sysContext" placeholder="e.g. Workforce development, community college" />
+      </div>
+      <div class="field">
+        <label class="label" for="sysPopulation">Target population</label>
+        <input type="text" id="sysPopulation" placeholder="e.g. Adult learners, low-income rural counties" />
+      </div>
+
+      <div class="callout">
+        AI systems break a core evaluation assumption: same inputs don't always produce same outputs. This rubric helps you ask the right questions before deployment — and document your findings.
+      </div>
+
+      <button class="btn btn-primary full" onclick="goNext()">Start Evaluation →</button>
+    </div>
+  </section>
+
+  <!-- Dimension steps will be generated -->
+  <div id="dimSteps"></div>
+
+  <!-- STEP 7: Scorecard -->
+  <section class="step" data-step="7">
+    <div class="card">
+      <div class="scorecard-hero">
+        <div class="label">Evaluation Scorecard</div>
+        <h1 class="scorecard-name" id="scoreName">AI System</h1>
+        <div class="scorecard-sub" id="scoreSub"></div>
+
+        <div class="readiness-row">
+          <div class="readiness-percent" id="readinessPct">0%</div>
+          <div class="readiness-label" id="readinessLabel">Pending</div>
+        </div>
+        <div class="big-bar"><div class="big-bar-fill" id="bigBarFill"></div></div>
+      </div>
+
+      <h2 class="section-heading">Dimension overview</h2>
+      <div class="radar-wrap">
+        <canvas id="radar" width="480" height="480"></canvas>
+      </div>
+
+      <h2 class="section-heading">Score by dimension</h2>
+      <div class="dim-grid" id="dimGrid"></div>
+
+      <h2 class="section-heading">What evidence should you trust?</h2>
+      <div class="evidence-table">
+        <div class="evidence-row">
+          <span class="tier-badge pill-success">TIER 1</span>
+          <div>
+            <div class="evidence-label">Independent benchmarks &amp; third-party audits</div>
+            <div class="evidence-desc">External validators with no commercial interest in the result.</div>
+          </div>
+        </div>
+        <div class="evidence-row">
+          <span class="tier-badge pill-success">TIER 1</span>
+          <div>
+            <div class="evidence-label">Production telemetry with statistical controls</div>
+            <div class="evidence-desc">Real-world performance data measured with rigor, not anecdote.</div>
+          </div>
+        </div>
+        <div class="evidence-row">
+          <span class="tier-badge pill-warning">TIER 2</span>
+          <div>
+            <div class="evidence-label">Structured red-teaming results</div>
+            <div class="evidence-desc">Adversarial testing with documented methodology and coverage.</div>
+          </div>
+        </div>
+        <div class="evidence-row">
+          <span class="tier-badge pill-warning">TIER 2</span>
+          <div>
+            <div class="evidence-label">Human evaluation with inter-rater reliability</div>
+            <div class="evidence-desc">Multiple reviewers, documented agreement metrics.</div>
+          </div>
+        </div>
+        <div class="evidence-row">
+          <span class="tier-badge pill-danger">TIER 3</span>
+          <div>
+            <div class="evidence-label">Vendor-provided benchmarks and demos</div>
+            <div class="evidence-desc">Self-reported, often cherry-picked. Useful as a starting point only.</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-heading">Priority gaps</h2>
+      <div id="gapsContainer"></div>
+
+      <h2 class="section-heading">Three things to remember</h2>
+      <div id="tipsContainer">
+        <div class="accordion">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)">
+            <span>Ask for the failure cases, not just the success stories.</span>
+            <svg class="accordion-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+          </button>
+          <div class="accordion-content"><div class="accordion-content-inner">Any vendor can show you their AI performing well. Ask them to show where it fails, how it fails, and what safeguards exist when it does.</div></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)">
+            <span>Distinguish accuracy from calibration.</span>
+            <svg class="accordion-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+          </button>
+          <div class="accordion-content"><div class="accordion-content-inner">A system right 85% of the time but confidently wrong 15% of the time is more dangerous than one right 80% that expresses appropriate uncertainty. Ask whether confidence levels are reported and accurate.</div></div>
+        </div>
+        <div class="accordion">
+          <button class="accordion-trigger" onclick="toggleAccordion(this)">
+            <span>Treat bias assessment as a required deliverable.</span>
+            <svg class="accordion-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 8l5 5 5-5"/></svg>
+          </button>
+          <div class="accordion-content"><div class="accordion-content-inner">Require disaggregated performance metrics by relevant subgroup — with acceptable differential thresholds stated in advance of deployment, not assessed after the fact.</div></div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn btn-outline" onclick="restart()">Start Over</button>
+        <button class="btn btn-outline" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav class="nav-row" id="navRow">
+  <div class="nav-inner">
+    <button class="btn btn-ghost" id="backBtn" onclick="goBack()">← Back</button>
+    <div class="score-pill" id="scorePill" style="display:none;">
+      <span class="dot"></span>
+      <span id="scorePillText">0 / 4 criteria met</span>
+    </div>
+    <button class="btn btn-primary" id="nextBtn" onclick="goNext()">Next →</button>
+  </div>
+</nav>
+
+<footer class="app-footer">
+  Built by Sudheer Kumar · AEA/MTI Hackathon 2026 · Framework from production AI deployment at enterprise scale
+</footer>
+
+<script>
+  /* ============================================================
+     DATA: Six dimensions
+  ============================================================ */
+  const DIMENSIONS = [
+    {
+      key: 'accuracy',
+      name: 'Accuracy',
+      question: 'Does it get the right answer?',
+      info: "Assess on realistic task distributions, not cherry-picked demos. For generative AI, accuracy includes factual groundedness — does the output align with verifiable facts?",
+      checks: [
+        { label: 'Evaluated on realistic task samples', sub: 'Not just vendor demos or curated examples' },
+        { label: 'Factual groundedness verified against source material', sub: 'Outputs align with verifiable facts or documents' },
+        { label: 'Error rates documented with confidence intervals', sub: 'Statistical reporting, not just point estimates' },
+        { label: 'Results reproducible by an independent evaluator', sub: 'Methodology documented enough to replicate' }
+      ]
+    },
+    {
+      key: 'latency',
+      name: 'Latency',
+      question: 'Does it respond in time for real-world use?',
+      info: "Measure p50, p95, and p99 latency — not averages, which mask the tail behavior that users actually experience in the field.",
+      checks: [
+        { label: 'Response time measured under realistic load', sub: 'Not just idle-state benchmarks' },
+        { label: 'Tail latency reported (p95/p99), not averages only', sub: 'Averages hide worst-case user experience' },
+        { label: "Latency assessed for target population's context", sub: 'Mobile, low-bandwidth, constrained environments considered' },
+        { label: 'Degradation under peak load documented', sub: 'System behavior when demand spikes' }
+      ]
+    },
+    {
+      key: 'safety',
+      name: 'Safety',
+      question: 'Does it refuse or flag when it should?',
+      info: "Requires structured adversarial testing, not spot-checks. Document refusal rates and false-positive rates — over-refusal is also a failure mode.",
+      checks: [
+        { label: 'Adversarial testing conducted by independent reviewers', sub: 'Not just the team that built the system' },
+        { label: 'Harmful outputs documented by category', sub: 'Failure taxonomy, not just a pass/fail verdict' },
+        { label: 'Refusal rates and false-positive rates reported', sub: 'Over-refusal is also a failure mode' },
+        { label: 'Escalation or human-in-the-loop protocols defined', sub: 'What happens when the system is uncertain?' }
+      ]
+    },
+    {
+      key: 'fairness',
+      name: 'Fairness',
+      question: 'Does it perform equally across groups?',
+      info: "AI systems trained on historical data often encode historical disparities. Require disaggregated metrics with thresholds set before deployment — not after.",
+      checks: [
+        { label: 'Disaggregated performance metrics by relevant subgroup', sub: 'Race, gender, geography, income, language' },
+        { label: 'Acceptable differential threshold stated before deployment', sub: 'Not assessed after the fact' },
+        { label: 'Training data audited for historical biases', sub: 'Data provenance reviewed, not assumed clean' },
+        { label: 'Fairness metrics reviewed by affected community representatives', sub: 'Not defined exclusively by the development team' }
+      ]
+    },
+    {
+      key: 'cost',
+      name: 'Cost',
+      question: 'Is it sustainable at the scale of deployment?',
+      info: "Per-query costs that seem trivial in pilots become material at scale. Evaluate total cost of ownership, not just the API bill.",
+      checks: [
+        { label: 'Per-query cost projected at target scale', sub: 'Pilot-scale costs often underestimate production reality' },
+        { label: 'Cost per unit of accuracy gain assessed', sub: 'Is the performance worth the spend?' },
+        { label: 'Monitoring and maintenance costs included in TCO', sub: 'Ongoing evaluation costs are consistently underestimated' },
+        { label: 'Cost implications for target population considered', sub: 'Device, data, or access costs borne by users?' }
+      ]
+    },
+    {
+      key: 'compliance',
+      name: 'Compliance',
+      question: 'Does it meet regulatory and policy requirements?',
+      info: "Evaluate compliance before deployment — retroactive remediation is expensive. Especially critical in health, education, and social services contexts.",
+      checks: [
+        { label: 'Data privacy and residency requirements verified', sub: 'FERPA, HIPAA, GDPR, or applicable regulations' },
+        { label: 'Audit trail and explainability requirements met', sub: 'Can decisions be reviewed and explained?' },
+        { label: 'Consent and disclosure requirements documented', sub: "Are users informed they're interacting with AI?" },
+        { label: 'Regulatory review completed before deployment', sub: 'Not deferred to post-launch' }
+      ]
+    }
+  ];
+
+  /* ============================================================
+     STATE
+  ============================================================ */
+  const state = {
+    currentStep: 0,
+    totalSteps: 8,
+    sysName: '',
+    sysContext: '',
+    sysPopulation: '',
+    scores: DIMENSIONS.map(() => [false, false, false, false])
+  };
+
+  /* ============================================================
+     BUILD DIMENSION STEPS
+  ============================================================ */
+  const dimStepsContainer = document.getElementById('dimSteps');
+  DIMENSIONS.forEach((dim, idx) => {
+    const stepIdx = idx + 1;
+    const sec = document.createElement('section');
+    sec.className = 'step';
+    sec.dataset.step = stepIdx;
+    sec.innerHTML = `
+      <div class="card">
+        <div class="dim-top">
+          <div>
+            <div class="dim-badge">${String(stepIdx).padStart(2, '0')} / 06</div>
+            <h1 class="dim-title">${dim.name}</h1>
+            <p class="dim-question">${dim.question}</p>
+          </div>
+          <div class="mini-score">
+            <div class="mini-score-label" id="miniLabel-${idx}">0 / 4 criteria met</div>
+            <div class="mini-bar"><div class="mini-bar-fill" id="miniFill-${idx}"></div></div>
+          </div>
+        </div>
+        <div class="callout">${dim.info}</div>
+        <div class="checklist" id="checklist-${idx}">
+          ${dim.checks.map((c, ci) => `
+            <label class="check-item" data-dim="${idx}" data-check="${ci}">
+              <input type="checkbox" />
+              <div class="check-box"></div>
+              <div class="check-text">
+                <div class="check-label">${c.label}</div>
+                <div class="check-sub">${c.sub}</div>
+              </div>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    dimStepsContainer.appendChild(sec);
+  });
+
+  // attach handlers
+  document.querySelectorAll('.check-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const di = parseInt(item.dataset.dim, 10);
+      const ci = parseInt(item.dataset.check, 10);
+      state.scores[di][ci] = !state.scores[di][ci];
+      updateChecklistVisuals(di);
+      updateScorePill();
+    });
+    item.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        item.click();
+      }
+    });
+    item.tabIndex = 0;
+  });
+
+  function updateChecklistVisuals(di) {
+    const items = document.querySelectorAll(`.check-item[data-dim="${di}"]`);
+    items.forEach((it, ci) => {
+      it.classList.toggle('checked', state.scores[di][ci]);
+      const cb = it.querySelector('input[type="checkbox"]');
+      if (cb) cb.checked = state.scores[di][ci];
+    });
+    const checked = state.scores[di].filter(Boolean).length;
+    const fill = document.getElementById(`miniFill-${di}`);
+    const lbl = document.getElementById(`miniLabel-${di}`);
+    fill.style.width = (checked / 4 * 100) + '%';
+    fill.style.background = scoreColor(checked, 4);
+    lbl.textContent = `${checked} / 4 criteria met`;
+  }
+
+  function scoreColor(n, total) {
+    const r = n / total;
+    if (r >= 0.75) return 'var(--success)';
+    if (r >= 0.4) return 'var(--warning)';
+    if (r > 0) return 'var(--danger)';
+    return 'var(--text-muted)';
+  }
+
+  function scorePillClass(n, total) {
+    const r = n / total;
+    if (r >= 0.75) return 'pill-success';
+    if (r >= 0.4) return 'pill-warning';
+    return 'pill-danger';
+  }
+
+  function scoreLabel(n, total) {
+    const r = n / total;
+    if (r >= 0.75) return 'Strong';
+    if (r >= 0.4) return 'Partial';
+    return 'Gaps';
+  }
+
+  /* ============================================================
+     NAVIGATION
+  ============================================================ */
+  function goNext() {
+    if (state.currentStep === 0) {
+      state.sysName = document.getElementById('sysName').value.trim();
+      state.sysContext = document.getElementById('sysContext').value.trim();
+      state.sysPopulation = document.getElementById('sysPopulation').value.trim();
+    }
+    if (state.currentStep < state.totalSteps - 1) {
+      transitionToStep(state.currentStep + 1);
+    }
+  }
+
+  function goBack() {
+    if (state.currentStep > 0) {
+      transitionToStep(state.currentStep - 1);
+    }
+  }
+
+  function transitionToStep(target) {
+    const current = document.querySelector(`.step[data-step="${state.currentStep}"]`);
+    const next = document.querySelector(`.step[data-step="${target}"]`);
+    if (!next) return;
+
+    current.classList.add('leaving');
+    setTimeout(() => {
+      current.classList.remove('active', 'leaving');
+      next.classList.add('active');
+      state.currentStep = target;
+      updateChrome();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (target === 7) renderScorecard();
+    }, 150);
+  }
+
+  function updateChrome() {
+    document.getElementById('stepCounter').textContent = `Step ${state.currentStep + 1} of ${state.totalSteps}`;
+    const pct = ((state.currentStep) / (state.totalSteps - 1)) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    backBtn.style.visibility = state.currentStep === 0 ? 'hidden' : 'visible';
+
+    if (state.currentStep === state.totalSteps - 1) {
+      nextBtn.style.display = 'none';
+    } else {
+      nextBtn.style.display = 'inline-flex';
+      nextBtn.textContent = state.currentStep === state.totalSteps - 2 ? 'See Results →' : 'Next →';
+    }
+
+    updateScorePill();
+  }
+
+  function updateScorePill() {
+    const pill = document.getElementById('scorePill');
+    const txt = document.getElementById('scorePillText');
+    const dot = pill.querySelector('.dot');
+    const dimIdx = state.currentStep - 1;
+    if (dimIdx >= 0 && dimIdx < 6) {
+      const checked = state.scores[dimIdx].filter(Boolean).length;
+      pill.style.display = 'inline-flex';
+      txt.textContent = `${DIMENSIONS[dimIdx].name}: ${checked} / 4 criteria met`;
+      dot.style.background = scoreColor(checked, 4);
+    } else {
+      pill.style.display = 'none';
+    }
+  }
+
+  function restart() {
+    state.currentStep = 0;
+    state.sysName = '';
+    state.sysContext = '';
+    state.sysPopulation = '';
+    state.scores = DIMENSIONS.map(() => [false, false, false, false]);
+    document.getElementById('sysName').value = '';
+    document.getElementById('sysContext').value = '';
+    document.getElementById('sysPopulation').value = '';
+    DIMENSIONS.forEach((_, i) => updateChecklistVisuals(i));
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active', 'leaving'));
+    document.querySelector('.step[data-step="0"]').classList.add('active');
+    updateChrome();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ============================================================
+     SCORECARD
+  ============================================================ */
+  function renderScorecard() {
+    const name = state.sysName || 'AI System';
+    const sub = [state.sysContext, state.sysPopulation].filter(Boolean).join(' · ');
+    document.getElementById('scoreName').textContent = name;
+    document.getElementById('scoreSub').textContent = sub || 'No context provided';
+
+    const totalChecked = state.scores.flat().filter(Boolean).length;
+    const totalPossible = 24;
+    const pct = Math.round((totalChecked / totalPossible) * 100);
+
+    const pctEl = document.getElementById('readinessPct');
+    const labelEl = document.getElementById('readinessLabel');
+    const barFill = document.getElementById('bigBarFill');
+
+    let color, label;
+    if (pct >= 75) { color = 'var(--success)'; label = 'Strong'; labelEl.style.background = 'var(--success-light)'; labelEl.style.color = 'var(--success)'; }
+    else if (pct >= 40) { color = 'var(--warning)'; label = 'Needs Work'; labelEl.style.background = 'var(--warning-light)'; labelEl.style.color = 'var(--warning)'; }
+    else { color = 'var(--danger)'; label = 'Significant Gaps'; labelEl.style.background = 'var(--danger-light)'; labelEl.style.color = 'var(--danger)'; }
+
+    pctEl.style.color = color;
+    labelEl.textContent = label;
+
+    // animate count up
+    animateNumber(pctEl, 0, pct, 800, v => v + '%');
+    setTimeout(() => { barFill.style.width = pct + '%'; barFill.style.background = color; }, 50);
+
+    renderDimGrid();
+    renderGaps();
+    setTimeout(() => drawRadar(), 100);
+  }
+
+  function animateNumber(el, from, to, duration, formatter) {
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const val = Math.round(from + (to - from) * eased);
+      el.textContent = formatter ? formatter(val) : val;
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function renderDimGrid() {
+    const grid = document.getElementById('dimGrid');
+    grid.innerHTML = '';
+    DIMENSIONS.forEach((dim, i) => {
+      const checked = state.scores[i].filter(Boolean).length;
+      const pillCls = scorePillClass(checked, 4);
+      const lbl = scoreLabel(checked, 4);
+      const color = scoreColor(checked, 4);
+      const div = document.createElement('div');
+      div.className = 'dim-mini';
+      div.innerHTML = `
+        <div class="dim-mini-row">
+          <div class="dim-mini-title">${dim.name}</div>
+          <span class="pill ${pillCls}">${lbl}</span>
+        </div>
+        <div class="dim-mini-row" style="margin-bottom:6px;">
+          <div class="dim-mini-score">${checked} / 4</div>
+        </div>
+        <div class="mini-bar"><div class="mini-bar-fill" style="width:${checked/4*100}%; background:${color};"></div></div>
+      `;
+      grid.appendChild(div);
+    });
+  }
+
+  function renderGaps() {
+    const container = document.getElementById('gapsContainer');
+    container.innerHTML = '';
+    let anyGaps = false;
+    DIMENSIONS.forEach((dim, i) => {
+      const unchecked = dim.checks.map((c, ci) => state.scores[i][ci] ? null : c).filter(Boolean);
+      if (unchecked.length === 0) return;
+      anyGaps = true;
+      const div = document.createElement('div');
+      div.className = 'gap-item';
+      div.innerHTML = `
+        <div class="gap-title">${dim.name}</div>
+        <ul class="gap-list">
+          ${unchecked.map(c => `<li>${c.label}</li>`).join('')}
+        </ul>
+      `;
+      container.appendChild(div);
+    });
+    if (!anyGaps) {
+      container.innerHTML = `
+        <div class="all-good">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          All criteria met across every dimension. Strong evaluation foundation.
+        </div>
+      `;
+    }
+  }
+
+  /* ============================================================
+     RADAR CHART (vanilla canvas)
+  ============================================================ */
+  function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  function hexToRgba(color, alpha) {
+    // accept hex or rgb()
+    const ctx = document.createElement('canvas').getContext('2d');
+    ctx.fillStyle = color;
+    const computed = ctx.fillStyle;
+    if (computed.startsWith('#')) {
+      const h = computed.slice(1);
+      const bigint = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    return computed.replace(/rgba?\(([^)]+)\)/, (m, body) => {
+      const parts = body.split(',').map(p => p.trim());
+      return `rgba(${parts[0]},${parts[1]},${parts[2]},${alpha})`;
+    });
+  }
+
+  function drawRadar() {
+    const canvas = document.getElementById('radar');
+    const dpr = window.devicePixelRatio || 1;
+    const containerWidth = canvas.parentElement.clientWidth - 40;
+    const size = Math.min(480, containerWidth);
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, size, size);
+
+    const cx = size / 2;
+    const cy = size / 2;
+    const radius = size * 0.34;
+    const N = 6;
+
+    const accent = getCSSVar('--accent') || '#5B4FD4';
+    const border = getCSSVar('--border-strong') || 'rgba(0,0,0,0.15)';
+    const muted = getCSSVar('--text-muted') || '#A8A7A0';
+    const textPrimary = getCSSVar('--text-primary') || '#111110';
+
+    // grid rings (hex)
+    ctx.lineWidth = 1;
+    [0.25, 0.5, 0.75, 1].forEach(level => {
+      ctx.beginPath();
+      for (let i = 0; i < N; i++) {
+        const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+        const x = cx + Math.cos(angle) * radius * level;
+        const y = cy + Math.sin(angle) * radius * level;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = border;
+      ctx.stroke();
+    });
+
+    // axes
+    ctx.strokeStyle = border;
+    for (let i = 0; i < N; i++) {
+      const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+      ctx.stroke();
+    }
+
+    // data polygon
+    const points = [];
+    for (let i = 0; i < N; i++) {
+      const score = state.scores[i].filter(Boolean).length / 4;
+      const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+      const x = cx + Math.cos(angle) * radius * score;
+      const y = cy + Math.sin(angle) * radius * score;
+      points.push({ x, y, score });
+    }
+
+    // animated draw
+    let progress = 0;
+    function frame() {
+      progress = Math.min(progress + 0.06, 1);
+      ctx.clearRect(0, 0, size, size);
+
+      // re-draw grid
+      ctx.lineWidth = 1;
+      [0.25, 0.5, 0.75, 1].forEach(level => {
+        ctx.beginPath();
+        for (let i = 0; i < N; i++) {
+          const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+          const x = cx + Math.cos(angle) * radius * level;
+          const y = cy + Math.sin(angle) * radius * level;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = border;
+        ctx.stroke();
+      });
+      // axes
+      for (let i = 0; i < N; i++) {
+        const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+        ctx.strokeStyle = border;
+        ctx.stroke();
+      }
+
+      // animated points
+      const animPoints = points.map(p => ({
+        x: cx + (p.x - cx) * progress,
+        y: cy + (p.y - cy) * progress
+      }));
+
+      // fill
+      ctx.beginPath();
+      animPoints.forEach((p, i) => {
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      });
+      ctx.closePath();
+      ctx.fillStyle = hexToRgba(accent, 0.18);
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // dots
+      animPoints.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = accent;
+        ctx.fill();
+        ctx.strokeStyle = getCSSVar('--bg-card') || '#fff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+
+      // labels
+      ctx.fillStyle = textPrimary;
+      ctx.font = '600 12px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (let i = 0; i < N; i++) {
+        const angle = -Math.PI / 2 + (i / N) * Math.PI * 2;
+        const lx = cx + Math.cos(angle) * (radius + 28);
+        const ly = cy + Math.sin(angle) * (radius + 24);
+        ctx.fillText(DIMENSIONS[i].name, lx, ly);
+        const score = state.scores[i].filter(Boolean).length;
+        ctx.fillStyle = muted;
+        ctx.font = '500 10px Inter, sans-serif';
+        ctx.fillText(`${score}/4`, lx, ly + 14);
+        ctx.fillStyle = textPrimary;
+        ctx.font = '600 12px Inter, sans-serif';
+      }
+
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    frame();
+  }
+
+  /* ============================================================
+     ACCORDION
+  ============================================================ */
+  function toggleAccordion(btn) {
+    const acc = btn.parentElement;
+    acc.classList.toggle('open');
+  }
+
+  /* ============================================================
+     INIT
+  ============================================================ */
+  updateChrome();
+
+  // Redraw radar on resize when on scorecard
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (state.currentStep === 7) {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(drawRadar, 150);
+    }
+  });
+
+  // Keyboard: arrow keys for nav
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    if (e.key === 'ArrowRight' && state.currentStep < state.totalSteps - 1) goNext();
+    if (e.key === 'ArrowLeft' && state.currentStep > 0) goBack();
+  });
+</script>
+</body>
+</html>
