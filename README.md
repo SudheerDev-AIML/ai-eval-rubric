@@ -2,7 +2,7 @@
 
 A structured, interactive evaluation framework for AI-powered programs and interventions. Built for non-technical program evaluators who need to assess whether an AI system is ready for real-world deployment.
 
-**Live demo:** [https://YOUR-USERNAME.github.io/ai-eval-rubric/](https://YOUR-USERNAME.github.io/ai-eval-rubric/)
+**Live demo:** [https://sudheerdev-aiml.github.io/ai-eval-rubric/](https://sudheerdev-aiml.github.io/ai-eval-rubric/)
 
 > AI systems break a core evaluation assumption: same inputs don't always produce same outputs. This rubric helps you ask the right questions before deployment — and document your findings.
 
